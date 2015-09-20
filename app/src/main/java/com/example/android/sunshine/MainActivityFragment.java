@@ -39,8 +39,10 @@ public class MainActivityFragment extends Fragment {
 
     public MainActivityFragment() {
     }
+
     //定义一个全局的Adapter用于适配数据, 将接受的数据适配到显示中.
     private ArrayAdapter<String> mForecastAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class MainActivityFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         //教程里里面是通过代码加载的fragment,这里fragment直接写到了activity_main.xml中
-        String [] forecastArray = new String[]{
+        String[] forecastArray = new String[]{
                 "Today - Sunny - 88/63",
                 "Tomorrow - Sunny - 88/63",
                 "Weds - Sunny - 88/63",
@@ -93,12 +95,13 @@ public class MainActivityFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchWeatherTask extends AsyncTask<String,Void,String[]> {
+    public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         /* The date/time conversion code is going to be moved outside the asynctask later,
          * so for convenience we're breaking it out into its own method now.
          */
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
-        private String getReadableDateString(long time){
+
+        private String getReadableDateString(long time) {
             // Because the API returns a unix timestamp (measured in seconds),
             // it must be converted to milliseconds in order to be converted to valid date.
             SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
@@ -118,11 +121,9 @@ public class MainActivityFragment extends Fragment {
         }
 
         /**
-         * Take the String representing the complete forecast in JSON Format and
-         * pull out the data we need to construct the Strings needed for the wireframes.
-         *
-         * Fortunately parsing is easy:  constructor takes the JSON string and converts it
-         * into an Object hierarchy for us.
+         * Take the String representing the complete forecast in JSON Format and pull out the data we need to construct the Strings needed for the wireframes.
+         * <p/>
+         * Fortunately parsing is easy:  constructor takes the JSON string and converts it into an Object hierarchy for us.
          */
         private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException, JSONException {
@@ -157,7 +158,7 @@ public class MainActivityFragment extends Fragment {
             dayTime = new Time();
 
             String[] resultStrs = new String[numDays];
-            for(int i = 0; i < weatherArray.length(); i++) {
+            for (int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String day;
                 String description;
@@ -171,7 +172,7 @@ public class MainActivityFragment extends Fragment {
                 // "this saturday".
                 long dateTime;
                 // Cheating to convert this to UTC time, which is what we want anyhow
-                dateTime = dayTime.setJulianDay(julianStartDay+i);
+                dateTime = dayTime.setJulianDay(julianStartDay + i);
                 day = getReadableDateString(dateTime);
 
                 // description is in a child array called "weather", which is 1 element long.
@@ -294,11 +295,12 @@ public class MainActivityFragment extends Fragment {
             // This will only happen if there was an error getting or parsing the forecast.
             return null;
         }
+
         @Override
         protected void onPostExecute(String[] result) {
             if (result != null) {
                 mForecastAdapter.clear();
-                for(String dayForecastStr : result) {
+                for (String dayForecastStr : result) {
                     mForecastAdapter.add(dayForecastStr);
                 }
                 // New data is back from the server.  Hooray!
